@@ -50,4 +50,62 @@
  */
 export function createFestivalManager() {
   // Your code here
+
+  let festivals=[];
+  let totalCount=0;
+
+  const addFestival = (name, date, type)=>{
+    if(typeof name !=="string" || name.trim()==="" || typeof date !=="string") return -1;
+    if(type !== "cultural" && type !=="national" && type!=="religious") return -1;
+
+    if(festivals.find(
+        (festival) =>{
+          return festival.name.trim()===name;
+        }
+    )!==undefined) return -1;
+
+    festivals.push({name: name,date: date,type: type});
+    totalCount++;
+    return festivals.length
+  };
+
+  const removeFestival=(name)=>{
+    if(festivals.find(
+        (festival) =>{
+          return festival.name.trim()===name;
+        }
+    )===undefined) return false;
+    else{
+      festivals=festivals.filter((festival)=>festival.name !== name);
+      totalCount--;
+      return true;
+    }
+  }
+
+  const getAll = ()=>{
+    let newFestivals=[...festivals];
+    return newFestivals;
+  }
+
+  const getByType = (type)=>{
+    return festivals=[...festivals.filter((festival)=>festival.type === type)];
+  }
+
+  const getUpcoming = (currentDate, n = 3) => {
+    if (typeof currentDate !== "string") return [];
+
+    return festivals
+      .filter(festival => festival.date >= currentDate)
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(0, n)
+      .map(festival => ({ ...festival }));
+  };
+
+  const getCount = ()=>{
+    return totalCount;
+  }
+
+
+
+  return {addFestival,removeFestival,getAll,getByType,getUpcoming,getCount};
 }

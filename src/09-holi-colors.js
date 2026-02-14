@@ -55,20 +55,85 @@
  */
 export function mixColors(color1, color2) {
   // Your code here
+  if(color1===null || color2===null || color1===undefined || color2===undefined) return null;
+
+  return {
+    "name":`${color1.name}-${color2.name}`,
+    "r": Math.round((color1.r+color2.r)/2),
+    "b": Math.round((color1.b+color2.b)/2),
+    "g": Math.round((color1.g+color2.g)/2)
+  }
 }
 
 export function adjustBrightness(color, factor) {
   // Your code here
+  if(color===null || color==undefined || typeof factor !== "number" || Number.isNaN(factor)) return null;
+
+  let newr=Math.round(color.r*factor);
+  if(newr<0) newr=0;
+  if(newr>255) newr=255;
+
+  let newg=Math.round(color.g*factor);
+  if(newg<0) newg=0;
+  if(newg>255) newg=255;
+
+  let newb=Math.round(color.b*factor);
+  if(newb<0) newb=0;
+  if(newb>255) newb=255;
+
+  return {
+    "name":color.name,
+    "r": newr,
+    "b": newb,
+    "g": newg
+  }
 }
 
 export function addToPalette(palette, color) {
   // Your code here
+  if (!Array.isArray(palette)) {
+    return color ? [color] : [];
+  }
+
+  if(!color || typeof color !== "object" || color.r == null || color.g == null || color.b == null) return [...palette];
+  return [...palette, color];
 }
 
 export function removeFromPalette(palette, colorName) {
   // Your code here
+  if (!Array.isArray(palette)) return [];
+
+  let found = false;
+
+  const result = palette.filter(color => {
+    if (color.name === colorName) {
+      found = true;
+      return false;
+    }
+    return true;
+  });
+
+  // If nothing removed → return copy
+  return found ? result : [...palette];
 }
 
 export function mergePalettes(palette1, palette2) {
   // Your code here
+  const p1 = Array.isArray(palette1) ? palette1 : [];
+  const p2 = Array.isArray(palette2) ? palette2 : [];
+
+  const merged = [];
+  const seen = new Set();
+
+  for (let color of [...p1, ...p2]) {
+
+    if (!color || !color.name) continue;
+
+    if (!seen.has(color.name)) {
+      seen.add(color.name);
+      merged.push(color);
+    }
+  }
+
+  return merged;
 }

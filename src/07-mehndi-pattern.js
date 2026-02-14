@@ -54,20 +54,66 @@
  */
 export function repeatChar(char, n) {
   // Your code here
+  if(typeof char !== "string" || char.trim()==="") return "";
+  if(n<=0) return "";
+  return char + repeatChar(char, n - 1);
 }
 
 export function sumNestedArray(arr) {
   // Your code here
+  if(!Array.isArray(arr)) return 0;
+  if( arr.length===0) return 0;
+
+  let sum=0;
+  for (let ele of arr) {
+    if (Array.isArray(ele)) {
+      sum += sumNestedArray(ele);
+    } 
+    else if (typeof ele === "number" && !Number.isNaN(ele)) {
+      sum += ele;
+    }
+  }
+  return sum;
 }
 
 export function flattenArray(arr) {
   // Your code here
+  if(!Array.isArray(arr)) return [];
+
+  let result=[];
+  for(let ele of arr){
+    if(Array.isArray(ele)) result=result.concat(flattenArray(ele));
+    else result.push(ele);
+  }
+  return result;
 }
 
 export function isPalindrome(str) {
   // Your code here
+  if (typeof str !== "string") return false;
+
+  str = str.toLowerCase();
+
+  if (str.length <= 1) return true;
+
+  if (str[0] !== str[str.length - 1]) return false;
+
+  return isPalindrome(str.slice(1, -1));
 }
 
 export function generatePattern(n) {
   // Your code here
+  if (!Number.isInteger(n) || n <= 0) return [];
+
+  function buildAsc(k) {
+    if (k === 1) return ["*"];
+
+    const prev = buildAsc(k - 1);
+    return [...prev, "*".repeat(k)];
+  }
+
+  const asc = buildAsc(n);
+  const desc = asc.slice(0, -1).reverse();
+
+  return [...asc, ...desc];
 }
